@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.LongAccumulator;
 public class Main extends Application {
 
     FirstWindow firstWindow = FirstWindow.getInstance();
-    SecondWindow secondWindow = new SecondWindow();
+    SecondWindow secondWindow = SecondWindow.getInstance();
     Button button1;
     Button button2;
     ImageView imageView;
@@ -47,14 +47,8 @@ public class Main extends Application {
             public void handle(ActionEvent actionEvent) {
                 primaryStage.close();
                 primaryStage.setTitle("Color Selection");
-                root = secondWindow.root;
-                scene = secondWindow.getScene();
-                imageView = secondWindow.getImage();
-                button1 = secondWindow.getButton1();
-                button2 = secondWindow.getButton2();
+                setSecondWindow();
                 primaryStage.setScene(scene);
-                root = getRoot(root,imageView,button1);
-                root.getChildren().add(button2);
                 primaryStage.show();
 
             }
@@ -68,13 +62,14 @@ public class Main extends Application {
         root = firstWindow.getRoot();
     }
 
-    public Group getRoot(Group root, ImageView imageView, Button button){
-        root.getChildren().add(imageView);
-        root.getChildren().add(button);
-        return root;
+    private void setSecondWindow(){
+        root = secondWindow.getRoot();
+        scene = secondWindow.getScene();
+        imageView = secondWindow.getImageView();
+        button1 = secondWindow.getButton1();
+        button2 = secondWindow.getButton2();
     }
-
-
+    
 
     public static void main(String[] args) {
         launch(args);
