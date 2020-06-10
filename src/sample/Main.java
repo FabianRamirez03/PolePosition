@@ -24,26 +24,22 @@ import java.util.concurrent.atomic.LongAccumulator;
 
 public class Main extends Application {
 
-    FirstWindow initial = new FirstWindow();
-    SecondWindow secundary = new SecondWindow();
+    FirstWindow firstWindow = FirstWindow.getInstance();
+    SecondWindow secondWindow = new SecondWindow();
     Button button1;
     Button button2;
-    ImageView mv;
+    ImageView imageView;
     Scene scene;
     Group root;
+
+
 
     @Override
     public void start(Stage primaryStage){
 
         primaryStage.setTitle("PolePosition");
-
-        root = initial.root;
-        scene = initial.getScene();
-        mv = initial.getImage();
-        button1 = initial.getButton();
+        this.setFirstWindow();
         primaryStage.setScene(scene);
-
-        root = this.getRoot(root,mv,button1);
         primaryStage.show();
 
         button1.setOnAction(new EventHandler<ActionEvent>() {
@@ -51,13 +47,13 @@ public class Main extends Application {
             public void handle(ActionEvent actionEvent) {
                 primaryStage.close();
                 primaryStage.setTitle("Color Selection");
-                root = secundary.root;
-                scene = secundary.getScene();
-                mv = secundary.getImage();
-                button1 = secundary.getButton1();
-                button2 = secundary.getButton2();
+                root = secondWindow.root;
+                scene = secondWindow.getScene();
+                imageView = secondWindow.getImage();
+                button1 = secondWindow.getButton1();
+                button2 = secondWindow.getButton2();
                 primaryStage.setScene(scene);
-                root = getRoot(root,mv,button1);
+                root = getRoot(root,imageView,button1);
                 root.getChildren().add(button2);
                 primaryStage.show();
 
@@ -65,8 +61,15 @@ public class Main extends Application {
         });
     }
 
-    public Group getRoot(Group root, ImageView mv, Button button){
-        root.getChildren().add(mv);
+    private void setFirstWindow(){
+        button1 = firstWindow.getButton();
+        imageView = firstWindow.getImageView();
+        scene = firstWindow.getScene();
+        root = firstWindow.getRoot();
+    }
+
+    public Group getRoot(Group root, ImageView imageView, Button button){
+        root.getChildren().add(imageView);
         root.getChildren().add(button);
         return root;
     }

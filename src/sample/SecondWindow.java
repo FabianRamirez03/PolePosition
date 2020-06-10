@@ -10,14 +10,14 @@ public class SecondWindow {
 
     Button button1;
     Button button2;
-    Image bg;
+    Image backGround;
     ImageView mv;
     Group root = new Group();
     Scene scene;
 
     ImageView getImage(){
-        bg = new Image("file:PantallaSeleccion.jpg");
-        mv = new ImageView(bg);
+        backGround = new Image(getClass().getResource("Imagenes/PantallaSeleccion.jpg").toString());
+        mv = new ImageView(backGround);
         mv.setFitWidth(700);
         mv.setFitHeight(450);
         return mv;

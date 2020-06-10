@@ -8,19 +8,39 @@ import javafx.scene.image.ImageView;
 
 public class FirstWindow {
 
-    Button button;
-    Image image;
-    ImageView mv;
-    Group root = new Group();
-    Scene scene;
+    private static FirstWindow instance = null;
+
+    public static FirstWindow getInstance(){
+        if (instance == null){
+            instance = new FirstWindow();
+        }
+        return instance;
+    }
+
+    private FirstWindow() {
+        this.imageView = ImageView();
+        this.button = Button();
+        this.root = Root(imageView, button);
+    }
+
+    private ImageView imageView;
+    private Button button;
+    private Group root;
+    private Scene scene;
 
 
-    ImageView getImage(){
-        Image bg = new Image("file:BG.jpg");
-        ImageView mv = new ImageView(bg);
-        mv.setFitWidth(500);
-        mv.setFitHeight(300);
-        return mv;
+    private Group Root(ImageView imageView, Button button){
+        Group root = new Group();
+        root.getChildren().add(imageView);
+        root.getChildren().add(button);
+        return root;
+    }
+    private ImageView ImageView(){
+        Image bg = new Image(getClass().getResource("Imagenes/bg.jpg").toString());
+        ImageView imageView = new ImageView(bg);
+        imageView.setFitWidth(500);
+        imageView.setFitHeight(300);
+        return imageView;
     }
 
     Scene getScene(){
@@ -28,7 +48,7 @@ public class FirstWindow {
         return scene;
     }
 
-    Button getButton(){
+    private Button Button(){
         button = new Button();
         button.setText("Play");
         button.setPrefSize(100,40);
@@ -38,4 +58,27 @@ public class FirstWindow {
     }
 
 
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
+    }
+
+    public void setButton(Button button) {
+        this.button = button;
+    }
+
+    public Button getButton() {
+        return button;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public Group getRoot() {
+        return root;
+    }
+
+    public void setRoot(Group root) {
+        this.root = root;
+    }
 }
