@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class GameWindow {
 
@@ -15,6 +16,9 @@ public class GameWindow {
     private Canvas canvas;
     private Group root;
     private Scene scene;
+    private ImageView blueCar;
+    private ImageView redCar;
+
 
     public static GameWindow getInstance(){
         if (instance == null){
@@ -30,6 +34,26 @@ public class GameWindow {
         root.getChildren().add(canvas);
 
 
+    }
+
+    ImageView getRedCar(){
+        Image car = new Image(getClass().getResource("Imagenes/RedCar.png").toString());
+        redCar = new ImageView(car);
+        redCar.setFitHeight(200);
+        redCar.setFitWidth(200);
+        redCar.setX(620);
+        redCar.setY(450);
+        return redCar;
+    }
+
+    ImageView getBlueCar(){
+        Image car = new Image(getClass().getResource("Imagenes/BlueCar.jpg").toString());
+        blueCar = new ImageView(car);
+        blueCar.setFitHeight(200);
+        blueCar.setFitWidth(200);
+        blueCar.setX(200);
+        blueCar.setY(450);
+        return blueCar;
     }
 
     private Canvas getGameCanvas(){
