@@ -50,12 +50,17 @@ public class Main extends Application {
                         primaryStage.setTitle("Pole Position");
                         setGameWindow();
                         primaryStage.setScene(scene);
-                        root.getChildren().add(blueCar.carImageView);
-                        root.getChildren().add(redCar.carImageView);
                         primaryStage.show();
                         blueCar.velocity=10;
                         movement(blueCar,redCar);
+                        /*gameWindow.updateCanvas(blueCar.carImageView.getX(),
+                                                blueCar.carImageView.getY(),
+                                                redCar.carImageView.getX(),
+                                                redCar.carImageView.getY());
+                        root = gameWindow.getRoot();
+                        */
                     }
+
                 });
                 button2.setOnAction(new EventHandler<ActionEvent>(){
                     @Override
@@ -64,8 +69,6 @@ public class Main extends Application {
                         primaryStage.setTitle("Pole Position");
                         setGameWindow();
                         primaryStage.setScene(scene);
-                        root.getChildren().add(redCar.carImageView);
-                        root.getChildren().add(blueCar.carImageView);
                         primaryStage.show();
                         scene.setOnKeyPressed(e -> {
                             switch (e.getCode()){
@@ -99,6 +102,7 @@ public class Main extends Application {
                             }
                         });
 
+
                     }
                 });
             }
@@ -125,6 +129,8 @@ public class Main extends Application {
         blueCar.carImageView = gameWindow.getBlueCar();
         scene = gameWindow.getScene();
         root = gameWindow.getRoot();
+        root.getChildren().add(redCar.carImageView);
+        root.getChildren().add(blueCar.carImageView);
 
     }
 

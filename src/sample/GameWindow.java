@@ -36,7 +36,7 @@ public class GameWindow {
 
     ImageView getRedCar(){
 
-        Image car = new Image(getClass().getResource("Imagenes/RedCar.png").toString());
+        Image car = new Image(getClass().getResource("Imagenes/carroNaranja.png").toString());
         redCar = new ImageView(car);
         redCar.setFitHeight(200);
         redCar.setFitWidth(200);
@@ -46,7 +46,7 @@ public class GameWindow {
     }
 
     ImageView getBlueCar(){
-        Image car = new Image(getClass().getResource("Imagenes/BlueCar.jpg").toString());
+        Image car = new Image(getClass().getResource("Imagenes/carroAzul.png").toString());
         blueCar = new ImageView(car);
         blueCar.setFitHeight(200);
         blueCar.setFitWidth(200);
@@ -57,27 +57,54 @@ public class GameWindow {
 
     private Canvas getGameCanvas(){
         Canvas canvas = new Canvas( 1000, 750 );
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         final long startNanoTime = System.nanoTime();
 
+
         AnimatedImage fondo = new AnimatedImage();
-        Image[] imageArray = new Image[2];
-        imageArray[0] = new Image(getClass().getResource("Imagenes/recta0.png").toString(),true);
-        imageArray[1] = new Image(getClass().getResource("Imagenes/recta1.png").toString(),true);
-        fondo.frames = imageArray;
+        Image[] fondoArray = Util.getImageArray("recta",2);
+        fondo.frames = fondoArray;
         fondo.duration = 0.100;
+
+
         new AnimationTimer()
         {
             public void handle(long currentNanoTime)
             {
                 double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-
-
-                gc.drawImage( fondo.getFrame(t), 0, 0 );
-
+                graphicsContext.drawImage( fondo.getFrame(t), 0, 0 );
             }
         }.start();
         return canvas;
+    }
+
+    public void updateCanvas(double oneX, double oneY, double twoX, double twoY){
+        Canvas canvas = new Canvas( 1000, 750 );
+        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+        final long startNanoTime = System.nanoTime();
+
+
+        AnimatedImage fondo = new AnimatedImage();
+        Image[] fondoArray = Util.getImageArray("recta",2);
+        fondo.frames = fondoArray;
+        fondo.duration = 0.100;
+
+        AnimatedImage car1 = new AnimatedImage();
+        Image[] car1Array = Util.getImageArray("carro", 2);
+        car1.frames = car1Array;
+        car1.duration = 0.100;
+
+
+        new AnimationTimer()
+        {
+            public void handle(long currentNanoTime)
+            {
+                double t = (currentNanoTime - startNanoTime) / 1000000000.0;
+                graphicsContext.drawImage( fondo.getFrame(t), 0, 0 );
+                graphicsContext.drawImage(car1.getFrame(t), oneX, oneY);
+            }
+        }.start();
+        this.root.getChildren().add(canvas);
     }
 
     private Scene setScene(Group root){

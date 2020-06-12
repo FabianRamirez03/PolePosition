@@ -16,12 +16,5 @@ public class AnimatedImage {
         return frames[index];
     }
 
-    public static Image[] getImageArray(String name, int length){
-        Image[] imageArray = new Image[length];
-        imageArray[0] = new Image("recta0.png",true);
-        imageArray[1] = new Image("recta1.png");
-        return imageArray;
-    }
-
 
 }
