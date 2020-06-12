@@ -32,11 +32,10 @@ public class GameWindow {
         this.root = new Group();
         this.scene = setScene(root);
         root.getChildren().add(canvas);
-
-
     }
 
     ImageView getRedCar(){
+
         Image car = new Image(getClass().getResource("Imagenes/RedCar.png").toString());
         redCar = new ImageView(car);
         redCar.setFitHeight(200);

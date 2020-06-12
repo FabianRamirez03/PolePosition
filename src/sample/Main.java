@@ -19,8 +19,8 @@ public class Main extends Application {
     Button button1;
     Button button2;
     ImageView imageView;
-    ImageView redCar;
-    ImageView blueCar;
+    Car redCar = new Car();
+    Car blueCar = new Car();
     Scene scene;
     Group root;
 
@@ -50,41 +50,11 @@ public class Main extends Application {
                         primaryStage.setTitle("Pole Position");
                         setGameWindow();
                         primaryStage.setScene(scene);
-                        root.getChildren().add(blueCar);
-                        root.getChildren().add(redCar);
+                        root.getChildren().add(blueCar.carImageView);
+                        root.getChildren().add(redCar.carImageView);
                         primaryStage.show();
-                        scene.setOnKeyPressed(e -> {
-                            switch (e.getCode()){
-                                case A:
-                                    if(redCar.getY() > 320){
-                                        redCar.setFitWidth(redCar.getFitWidth() - 7);
-                                        redCar.setFitHeight(redCar.getFitHeight() - 7);
-                                        redCar.setY(redCar.getY() - 5);
-                                        redCar.setX(redCar.getX() - 3.6);
-                                    }
-                                    if(blueCar.getX()==(redCar.getX() + 200)){
-                                        break;
-                                    }else {
-                                        blueCar.setX(blueCar.getX() - 5);
-                                    }
-                                    break;
-                                case D:
-                                    if(redCar.getY() > 320){
-                                        redCar.setFitWidth(redCar.getFitWidth() - 7);
-                                        redCar.setFitHeight(redCar.getFitHeight() - 7);
-                                        redCar.setY(redCar.getY() - 5);
-                                        redCar.setX(redCar.getX() - 3.6);
-
-                                    }
-                                    if(blueCar.getX()==(redCar.getX() - 200)){
-                                        break;
-                                    }else {
-                                        blueCar.setX(blueCar.getX() + 5);
-                                    }
-                                    break;
-                            }
-                        });
-
+                        blueCar.velocity=10;
+                        movement(blueCar,redCar);
                     }
                 });
                 button2.setOnAction(new EventHandler<ActionEvent>(){
@@ -94,36 +64,36 @@ public class Main extends Application {
                         primaryStage.setTitle("Pole Position");
                         setGameWindow();
                         primaryStage.setScene(scene);
-                        root.getChildren().add(redCar);
-                        root.getChildren().add(blueCar);
+                        root.getChildren().add(redCar.carImageView);
+                        root.getChildren().add(blueCar.carImageView);
                         primaryStage.show();
                         scene.setOnKeyPressed(e -> {
                             switch (e.getCode()){
                                 case A:
-                                    if(blueCar.getY() > 320){
-                                        blueCar.setFitWidth(blueCar.getFitWidth() - 7);
-                                        blueCar.setFitHeight(blueCar.getFitHeight() - 7);
-                                        blueCar.setY(blueCar.getY() - 5);
-                                        blueCar.setX(blueCar.getX() + 11);
+                                    if(blueCar.carImageView.getY() > 300){
+                                        blueCar.carImageView.setFitWidth(blueCar.carImageView.getFitWidth() - 7);
+                                        blueCar.carImageView.setFitHeight(blueCar.carImageView.getFitHeight() - 7);
+                                        blueCar.carImageView.setY(blueCar.carImageView.getY() - 5);
+                                        blueCar.carImageView.setX(blueCar.carImageView.getX() + 11);
                                     }
-                                    if(redCar.getX()==(blueCar.getX() + 200)){
+                                    if(redCar.carImageView.getX()==(blueCar.carImageView.getX() + 200)){
                                         break;
                                     }else {
-                                        redCar.setX(redCar.getX() - 5);
+                                        redCar.carImageView.setX(redCar.carImageView.getX() - 5);
                                     }
                                     break;
                                 case D:
-                                    if(blueCar.getY() > 320){
-                                        blueCar.setFitWidth(blueCar.getFitWidth() - 7);
-                                        blueCar.setFitHeight(blueCar.getFitHeight() - 7);
-                                        blueCar.setY(blueCar.getY() - 5);
-                                        blueCar.setX(blueCar.getX() + 11);
+                                    if(blueCar.carImageView.getY() > 300){
+                                        blueCar.carImageView.setFitWidth(blueCar.carImageView.getFitWidth() - 7);
+                                        blueCar.carImageView.setFitHeight(blueCar.carImageView.getFitHeight() - 7);
+                                        blueCar.carImageView.setY(blueCar.carImageView.getY() - 5);
+                                        blueCar.carImageView.setX(blueCar.carImageView.getX() + 11);
 
                                     }
-                                    if(redCar.getX()==(blueCar.getX() - 200)){
+                                    if(redCar.carImageView.getX()==(blueCar.carImageView.getX() - 200)){
                                         break;
                                     }else {
-                                        redCar.setX(redCar.getX() + 5);
+                                        redCar.carImageView.setX(redCar.carImageView.getX() + 5);
                                     }
                                     break;
                             }
@@ -151,9 +121,8 @@ public class Main extends Application {
     }
 
     private void setGameWindow(){
-
-        this.redCar = gameWindow.getRedCar();
-        this.blueCar = gameWindow.getBlueCar();
+        redCar.carImageView = gameWindow.getRedCar();
+        blueCar.carImageView = gameWindow.getBlueCar();
         scene = gameWindow.getScene();
         root = gameWindow.getRoot();
 
@@ -163,7 +132,44 @@ public class Main extends Application {
 
     }
 
+    public void movement(Car ClientCar,Car EnemyCar){
+        scene.setOnKeyPressed(e -> {
+            switch (e.getCode()){
+                case A:
+                    movementAux(ClientCar, EnemyCar, -1);
+                    break;
+                case D:
+                    movementAux(ClientCar, EnemyCar, 1);
+                    break;
+            }
+        });
+    }
 
+    void movementAux(Car ClientCar, Car EnemyCar, Integer dir){
+        if(EnemyCar.carImageView.getY() > 300
+                && EnemyCar.velocity != ClientCar.velocity){
+            if(EnemyCar.velocity > ClientCar.velocity) {
+                Integer difference = EnemyCar.velocity - ClientCar.velocity;
+                EnemyCar.carImageView.setFitWidth(EnemyCar.carImageView.getFitWidth() - difference*(7/5));
+                EnemyCar.carImageView.setFitHeight(EnemyCar.carImageView.getFitHeight() - difference*(7/5));
+                EnemyCar.carImageView.setY(EnemyCar.carImageView.getY() - difference);
+                EnemyCar.carImageView.setX(EnemyCar.carImageView.getX() - difference * 0.72);
+            }else{
+                Integer difference = ClientCar.velocity - EnemyCar.velocity;
+                EnemyCar.carImageView.setY(EnemyCar.carImageView.getY() + difference);
+            }
+        }
+        if(((ClientCar.carImageView.getX()==(EnemyCar.carImageView.getX() - dir*200)
+                || ClientCar.carImageView.getX() + dir*200 == EnemyCar.carImageView.getX())
+                && ClientCar.carImageView.getY() == EnemyCar.carImageView.getY())
+                || ClientCar.carImageView.getX() == - dir*30
+                || ClientCar.carImageView.getX() == dir*770) {
+            ClientCar.velocity -= 1;
+            System.out.println("Disminuyó la velocidad: " + ClientCar.velocity);
+        }else {
+            ClientCar.carImageView.setX(ClientCar.carImageView.getX() + dir * 5);
+        }
+    }
 
     public static void main(String[] args) {
         launch(args);
