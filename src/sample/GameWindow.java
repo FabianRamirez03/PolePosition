@@ -18,6 +18,7 @@ public class GameWindow {
     private Scene scene;
     private ImageView blueCar;
     private ImageView redCar;
+    private ImageView hole;
 
 
     public static GameWindow getInstance(){
@@ -38,8 +39,8 @@ public class GameWindow {
 
         Image car = new Image(getClass().getResource("Imagenes/carroNaranja.png").toString());
         redCar = new ImageView(car);
-        redCar.setFitHeight(200);
-        redCar.setFitWidth(200);
+        redCar.setFitHeight(165);
+        redCar.setFitWidth(170);
         redCar.setX(620);
         redCar.setY(450);
         return redCar;
@@ -53,6 +54,14 @@ public class GameWindow {
         blueCar.setX(200);
         blueCar.setY(450);
         return blueCar;
+    }
+
+    ImageView getHoles(){
+        Image holeImage = new Image(getClass().getResource("Imagenes/hole.png").toString());
+        hole = new ImageView(holeImage);
+        hole.setFitHeight(50);
+        hole.setFitWidth(50);
+        return hole;
     }
 
     private Canvas getGameCanvas(){

@@ -21,6 +21,7 @@ public class Main extends Application {
     ImageView imageView;
     Car redCar = new Car();
     Car blueCar = new Car();
+    Hole holes = new Hole();
     Scene scene;
     Group root;
 
@@ -147,22 +148,49 @@ public class Main extends Application {
                 case D:
                     movementAux(ClientCar, EnemyCar, 1);
                     break;
+                case W:
+                    if (ClientCar.boost > 0) {
+                        ClientCar.velocity += 3;
+                        ClientCar.boost --;
+                    }
+                    System.out.println("El carro tomó un boost: " + ClientCar.velocity);
+                    break;
+                case S:
+                    if(holes.flag == 0){
+                        holes.holeImageView = gameWindow.getHoles();
+                        holes.holeImageView.setX(495);
+                        holes.holeImageView.setY(310);
+                        root.getChildren().add(holes.holeImageView);
+                        holes.flag = 1;
+                    }
+
+                    break;
             }
         });
     }
 
     void movementAux(Car ClientCar, Car EnemyCar, Integer dir){
-        if(EnemyCar.carImageView.getY() > 300
-                && EnemyCar.velocity != ClientCar.velocity){
-            if(EnemyCar.velocity > ClientCar.velocity) {
-                Integer difference = EnemyCar.velocity - ClientCar.velocity;
-                EnemyCar.carImageView.setFitWidth(EnemyCar.carImageView.getFitWidth() - difference*(7/5));
-                EnemyCar.carImageView.setFitHeight(EnemyCar.carImageView.getFitHeight() - difference*(7/5));
-                EnemyCar.carImageView.setY(EnemyCar.carImageView.getY() - difference);
-                EnemyCar.carImageView.setX(EnemyCar.carImageView.getX() - difference * 0.72);
-            }else{
-                Integer difference = ClientCar.velocity - EnemyCar.velocity;
-                EnemyCar.carImageView.setY(EnemyCar.carImageView.getY() + difference);
+        if(holes.flag == 1){
+            holeSizeChange(ClientCar,holes,1);
+            if((ClientCar.carImageView.getY() < (holes.holeImageView.getY() + 35))
+            && inRange(ClientCar,holes)){
+                ClientCar.velocity -= 3;
+                holes.holeImageView.setX(5000);
+                holes.holeImageView.setY(5000);
+                System.out.println("Chocó, se redujo la velocidad: " + ClientCar.velocity);
+                holes.flag = 0;
+            }
+            if(ClientCar.carImageView.getY() + ClientCar.carImageView.getFitHeight() < holes.holeImageView.getY()){
+                System.out.println("No chocó");
+                holes.flag = 0;
+            }
+        }
+        if(EnemyCar.velocity != ClientCar.velocity){
+            if(EnemyCar.velocity > ClientCar.velocity && EnemyCar.carImageView.getY() > 310) {
+                sizeChange(ClientCar, EnemyCar, -1);
+            }
+            if(ClientCar.velocity > EnemyCar.velocity){
+                sizeChange(ClientCar, EnemyCar, 1);
             }
         }
         if(((ClientCar.carImageView.getX()==(EnemyCar.carImageView.getX() - dir*200)
@@ -175,6 +203,36 @@ public class Main extends Application {
         }else {
             ClientCar.carImageView.setX(ClientCar.carImageView.getX() + dir * 5);
         }
+    }
+
+    void sizeChange(Car ClientCar, Car EnemyCar, Integer dir){
+        Integer difference = dir*(ClientCar.velocity - EnemyCar.velocity);
+        EnemyCar.carImageView.setFitWidth(EnemyCar.carImageView.getFitWidth() + dir*difference*(7/5));
+        EnemyCar.carImageView.setFitHeight(EnemyCar.carImageView.getFitHeight() + dir*difference*(7/5));
+        EnemyCar.carImageView.setY(EnemyCar.carImageView.getY() + dir*difference);
+        EnemyCar.carImageView.setX(EnemyCar.carImageView.getX() + dir*difference * 0.72);
+    }
+
+    void holeSizeChange(Car ClientCar, Hole hole, Integer dir){
+        Integer velocity = (ClientCar.velocity)/4;
+        hole.holeImageView.setFitWidth(hole.holeImageView.getFitWidth() + velocity*(7/5));
+        hole.holeImageView.setFitHeight(hole.holeImageView.getFitHeight() + velocity*(7/5));
+        hole.holeImageView.setY(hole.holeImageView.getY() + velocity);
+        hole.holeImageView.setX(hole.holeImageView.getX() - velocity * 0.72);
+    }
+
+    Boolean inRange(Car ClientCar, Hole holes){
+        if((ClientCar.carImageView.getX() > holes.holeImageView.getX())
+        && ClientCar.carImageView.getX() < (holes.holeImageView.getX() + holes.holeImageView.getFitWidth())){
+
+            if((ClientCar.carImageView.getY() >= holes.holeImageView.getY())
+                    && ClientCar.carImageView.getY() < (holes.holeImageView.getY() + holes.holeImageView.getFitHeight())){
+                return true;
+
+            }
+        }
+
+        return false;
     }
 
     public static void main(String[] args) {
