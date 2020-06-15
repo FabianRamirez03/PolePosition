@@ -70,17 +70,18 @@ public class Cliente  {
         carData[0] = myCar.carImageView.getX();
         carData[1] = myCar.carImageView.getY();
         carData[2] = myCar.carImageView.getFitWidth();
-        carData[3] = myCar.carImageView.getScaleY();
+        carData[3] = myCar.carImageView.getFitHeight();
         carData[4] = myCar.velocity;
         return carData;
     }
 
     private String getStringFromArray(double[] array){
         String string = name+",";
-        int length = array.length;
+        int length = array.length-1;
         for (int i = 0; i<length; i++){
             string = string+array[i]+",";
         }
+        string = string+array[length-1];
         return string;
     }
 
