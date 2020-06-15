@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    Cliente cliente = new Cliente();
     FirstWindow firstWindow = FirstWindow.getInstance();
     SecondWindow secondWindow = SecondWindow.getInstance();
     GameWindow gameWindow = GameWindow.getInstance();
@@ -52,14 +53,9 @@ public class Main extends Application {
                         setGameWindow();
                         primaryStage.setScene(scene);
                         primaryStage.show();
+                        cliente.setMyCar(blueCar, "blue");
                         blueCar.velocity=10;
                         movement(blueCar,redCar);
-                        /*gameWindow.updateCanvas(blueCar.carImageView.getX(),
-                                                blueCar.carImageView.getY(),
-                                                redCar.carImageView.getX(),
-                                                redCar.carImageView.getY());
-                        root = gameWindow.getRoot();
-                        */
                     }
 
                 });
@@ -71,6 +67,7 @@ public class Main extends Application {
                         setGameWindow();
                         primaryStage.setScene(scene);
                         primaryStage.show();
+                        cliente.setMyCar(redCar, "red");
                         scene.setOnKeyPressed(e -> {
                             switch (e.getCode()){
                                 case A:
@@ -166,6 +163,7 @@ public class Main extends Application {
 
                     break;
             }
+            cliente.start();
         });
     }
 
@@ -236,9 +234,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        launch(args);
 
-        //launch(args);
-        Cliente cliente = new Cliente();
-        cliente.start();
     }
 }

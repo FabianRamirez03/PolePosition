@@ -15,7 +15,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="PolePosition" options="--add-exports javafx.controls/com.sun.javafx.scene.control.skin=PolePosition" />
+      <module name="PolePosition" options="--add-exports javafx.controls/com.sun.javafx.scene.control.skin=PolePosition --add-exports java.security.jgss/org=PolePosition" />
     </option>
   </component>
 </project>
