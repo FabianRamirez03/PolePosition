@@ -26,6 +26,31 @@ public class Main extends Application {
     Group root;
 
 
+    public class Process extends Thread{
+
+        Car ClientCar;
+        Car EnemyCar;
+        Integer posDir;
+
+        Process(Car ClientCar, Car EnemyCar, Integer posDir){
+            this.ClientCar = ClientCar;
+            this.EnemyCar = EnemyCar;
+            this.posDir = posDir;
+        }
+
+        @Override
+        public void run(){
+            while (true){
+                movementEnemys(ClientCar,EnemyCar, posDir);
+                try{
+                    Process.sleep(75);
+                }catch (Exception e){
+                    System.out.println("Error thread");
+                }
+            }
+        }
+    }
+
 
     @Override
     public void start(Stage primaryStage){
@@ -52,14 +77,9 @@ public class Main extends Application {
                         setGameWindow();
                         primaryStage.setScene(scene);
                         primaryStage.show();
-                        blueCar.velocity=10;
+                        Process process = new Process(blueCar,redCar,-1);
+                        process.start();
                         movement(blueCar,redCar);
-                        /*gameWindow.updateCanvas(blueCar.carImageView.getX(),
-                                                blueCar.carImageView.getY(),
-                                                redCar.carImageView.getX(),
-                                                redCar.carImageView.getY());
-                        root = gameWindow.getRoot();
-                        */
                     }
 
                 });
@@ -71,39 +91,9 @@ public class Main extends Application {
                         setGameWindow();
                         primaryStage.setScene(scene);
                         primaryStage.show();
-                        scene.setOnKeyPressed(e -> {
-                            switch (e.getCode()){
-                                case A:
-                                    if(blueCar.carImageView.getY() > 300){
-                                        blueCar.carImageView.setFitWidth(blueCar.carImageView.getFitWidth() - 7);
-                                        blueCar.carImageView.setFitHeight(blueCar.carImageView.getFitHeight() - 7);
-                                        blueCar.carImageView.setY(blueCar.carImageView.getY() - 5);
-                                        blueCar.carImageView.setX(blueCar.carImageView.getX() + 11);
-                                    }
-                                    if(redCar.carImageView.getX()==(blueCar.carImageView.getX() + 200)){
-                                        break;
-                                    }else {
-                                        redCar.carImageView.setX(redCar.carImageView.getX() - 5);
-                                    }
-                                    break;
-                                case D:
-                                    if(blueCar.carImageView.getY() > 300){
-                                        blueCar.carImageView.setFitWidth(blueCar.carImageView.getFitWidth() - 7);
-                                        blueCar.carImageView.setFitHeight(blueCar.carImageView.getFitHeight() - 7);
-                                        blueCar.carImageView.setY(blueCar.carImageView.getY() - 5);
-                                        blueCar.carImageView.setX(blueCar.carImageView.getX() + 11);
-
-                                    }
-                                    if(redCar.carImageView.getX()==(blueCar.carImageView.getX() - 200)){
-                                        break;
-                                    }else {
-                                        redCar.carImageView.setX(redCar.carImageView.getX() + 5);
-                                    }
-                                    break;
-                            }
-                        });
-
-
+                        Process process = new Process(redCar,blueCar,3);
+                        process.start();
+                        movement(redCar,blueCar);
                     }
                 });
             }
@@ -141,6 +131,7 @@ public class Main extends Application {
 
     public void movement(Car ClientCar,Car EnemyCar){
         scene.setOnKeyPressed(e -> {
+
             switch (e.getCode()){
                 case A:
                     movementAux(ClientCar, EnemyCar, -1);
@@ -163,76 +154,98 @@ public class Main extends Application {
                         root.getChildren().add(holes.holeImageView);
                         holes.flag = 1;
                     }
-
-                    break;
             }
         });
     }
 
     void movementAux(Car ClientCar, Car EnemyCar, Integer dir){
-        if(holes.flag == 1){
-            holeSizeChange(ClientCar,holes,1);
-            if((ClientCar.carImageView.getY() < (holes.holeImageView.getY() + 35))
-            && inRange(ClientCar,holes)){
-                ClientCar.velocity -= 3;
-                holes.holeImageView.setX(5000);
-                holes.holeImageView.setY(5000);
-                System.out.println("Chocó, se redujo la velocidad: " + ClientCar.velocity);
-                holes.flag = 0;
-            }
-            if(ClientCar.carImageView.getY() + ClientCar.carImageView.getFitHeight() < holes.holeImageView.getY()){
-                System.out.println("No chocó");
-                holes.flag = 0;
-            }
-        }
-        if(EnemyCar.velocity != ClientCar.velocity){
-            if(EnemyCar.velocity > ClientCar.velocity && EnemyCar.carImageView.getY() > 310) {
-                sizeChange(ClientCar, EnemyCar, -1);
-            }
-            if(ClientCar.velocity > EnemyCar.velocity){
-                sizeChange(ClientCar, EnemyCar, 1);
-            }
-        }
         if(((ClientCar.carImageView.getX()==(EnemyCar.carImageView.getX() - dir*200)
                 || ClientCar.carImageView.getX() + dir*200 == EnemyCar.carImageView.getX())
                 && ClientCar.carImageView.getY() == EnemyCar.carImageView.getY())
                 || ClientCar.carImageView.getX() == - dir*30
                 || ClientCar.carImageView.getX() == dir*770) {
-            ClientCar.velocity -= 1;
-            System.out.println("Disminuyó la velocidad: " + ClientCar.velocity);
+            if(ClientCar.velocity > 0) {
+                ClientCar.velocity -= 1;
+                System.out.println("Disminuyó la velocidad: " + ClientCar.velocity);
+            }else{
+                ClientCar.velocity = 0;
+                System.out.println("La velocidad es mínima: " + ClientCar.velocity);
+            }
         }else {
             ClientCar.carImageView.setX(ClientCar.carImageView.getX() + dir * 5);
         }
     }
 
-    void sizeChange(Car ClientCar, Car EnemyCar, Integer dir){
-        Integer difference = dir*(ClientCar.velocity - EnemyCar.velocity);
+    void movementEnemys(Car ClientCar, Car EnemyCar,Integer posDir){
+        if(holes.flag == 1){
+            holeSizeChange(ClientCar,holes,1, posDir);
+            if((ClientCar.carImageView.getY() <= (holes.holeImageView.getY() + 35))
+                    && inRange(ClientCar,holes)){
+                holes.holeImageView.setX(5000);
+                holes.holeImageView.setY(5000);
+                ClientCar.velocity -= 3;
+                if(ClientCar.velocity <0 ){
+                    ClientCar.velocity = 0;
+                }
+                System.out.println("La velocidad es: " + ClientCar.velocity);
+                holes.flag = 0;
+            }
+            if(ClientCar.carImageView.getY() + ClientCar.carImageView.getFitHeight() < holes.holeImageView.getY()){
+                holes.holeImageView.setX(5000);
+                holes.holeImageView.setY(5000);
+                holes.flag = 0;
+            }
+        }
+        if(EnemyCar.velocity != ClientCar.velocity){
+            if(EnemyCar.velocity > ClientCar.velocity && EnemyCar.carImageView.getY() > 310) {
+                sizeChange(ClientCar, EnemyCar, -1,posDir);
+            }
+            if(ClientCar.velocity > EnemyCar.velocity){
+                sizeChange(ClientCar, EnemyCar, 1,-posDir);
+            }
+        }
+    }
+
+    void sizeChange(Car ClientCar, Car EnemyCar, Integer dir, Integer posDir){
+        Integer difference = abs(ClientCar.velocity - EnemyCar.velocity);
         EnemyCar.carImageView.setFitWidth(EnemyCar.carImageView.getFitWidth() + dir*difference*(7/5));
         EnemyCar.carImageView.setFitHeight(EnemyCar.carImageView.getFitHeight() + dir*difference*(7/5));
         EnemyCar.carImageView.setY(EnemyCar.carImageView.getY() + dir*difference);
-        EnemyCar.carImageView.setX(EnemyCar.carImageView.getX() + dir*difference * 0.72);
+        EnemyCar.carImageView.setX(EnemyCar.carImageView.getX() + posDir*difference * 0.72);
     }
 
-    void holeSizeChange(Car ClientCar, Hole hole, Integer dir){
-        Integer velocity = (ClientCar.velocity)/4;
+    void holeSizeChange(Car ClientCar, Hole hole, Integer dir, Integer posDir){
+        Integer velocity = dir*(ClientCar.velocity);
         hole.holeImageView.setFitWidth(hole.holeImageView.getFitWidth() + velocity*(7/5));
         hole.holeImageView.setFitHeight(hole.holeImageView.getFitHeight() + velocity*(7/5));
         hole.holeImageView.setY(hole.holeImageView.getY() + velocity);
-        hole.holeImageView.setX(hole.holeImageView.getX() - velocity * 0.72);
+        hole.holeImageView.setX(hole.holeImageView.getX() + posDir*velocity);
     }
 
     Boolean inRange(Car ClientCar, Hole holes){
-        if((ClientCar.carImageView.getX() > holes.holeImageView.getX())
-        && ClientCar.carImageView.getX() < (holes.holeImageView.getX() + holes.holeImageView.getFitWidth())){
+        if((holes.holeImageView.getX() >= ClientCar.carImageView.getX())
+        && holes.holeImageView.getX() <= ClientCar.carImageView.getX() + ClientCar.carImageView.getFitWidth()){
 
-            if((ClientCar.carImageView.getY() >= holes.holeImageView.getY())
-                    && ClientCar.carImageView.getY() < (holes.holeImageView.getY() + holes.holeImageView.getFitHeight())){
+            if((ClientCar.carImageView.getY() >= holes.holeImageView.getY())){
                 return true;
-
+            }
+        }
+        if((holes.holeImageView.getX() <= ClientCar.carImageView.getX())
+                && holes.holeImageView.getX() >= ClientCar.carImageView.getX()){
+            if((ClientCar.carImageView.getY() >= holes.holeImageView.getY())){
+                return true;
             }
         }
 
         return false;
+    }
+
+    Integer abs(Integer x){
+        if(x>0){
+            return x;
+        }else{
+            return -1*x;
+        }
     }
 
     public static void main(String[] args) {
