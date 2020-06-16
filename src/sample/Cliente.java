@@ -12,30 +12,26 @@ public class Cliente  {
     Car myCar;
     Car rivalCar;
     String name;
-    String lastAnswer = "";
+    private String lastAnswer = "";
+    private final String ip = "192.168.100.22";
+    private final int port = 25557;
 
     public Cliente() {
     }
 
     public boolean checkBothCars(){
-        boolean result = false;
-        update();
-        if(lastAnswer != "" && lastAnswer != "wait"){
-            System.out.println("No");
-            result = true;
+        if(lastAnswer.equals("wait")){
+            System.out.println("espero");
+            return false;
         }
-        return result;
+        return true;
     }
 
     //metodo que inicia el cliente
     public void update()   {
         try{
 
-            //string que indica la direccion ip local
-            String ip = "192.168.100.22";
 
-            //numero de puerto en donde se realiza la conexion cliente-servidor
-            int port = 25557;
 
             //se instancia el cliente y se le indica la ip y puerto de la conexion
             //canal por donde el cliente recibe y envia informacion
@@ -55,14 +51,13 @@ public class Cliente  {
             //Envia informacion al server
             PrintWriter pw = new PrintWriter(salida);
             pw.flush();
-            System.out.println(CarInfo());
             pw.write(CarInfo()+"\0");
             pw.flush();
             //Lee la informacion enviada por el servidor
             String msg = reader.readLine();
             lastAnswer = msg;
             //imprime la informacion enviada por el servidor
-            System.out.println(msg);
+            System.out.println("Server says: " + msg);
 
             //cierra el socket del cliente
             client.close();
@@ -78,6 +73,23 @@ public class Cliente  {
         }
     }
 
+    public void cleanFiles(){
+        try{
+            Socket client = new Socket(ip, port);
+            DataOutputStream salida = new DataOutputStream(client.getOutputStream());
+            InputStream input = client.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            PrintWriter pw = new PrintWriter(salida);
+            pw.flush();
+            pw.write("bye,");
+            pw.flush();
+            client.close();
+            salida.close();
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
     private void updateRivalsCar(String info){
         List<String> strList = new ArrayList<String>(Arrays.asList(info.split(",")));
         List<Double> numberList = new ArrayList<Double>();

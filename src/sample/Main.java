@@ -24,10 +24,10 @@ public class Main extends Application {
     Hole holes = new Hole();
     Scene scene;
     Group root;
-
-
+    int posDir;
+    Process process;
     public class Process extends Thread{
-
+        private volatile boolean exit = false;
         Car ClientCar;
         Car EnemyCar;
         Integer posDir;
@@ -40,7 +40,7 @@ public class Main extends Application {
 
         @Override
         public void run(){
-            while (true){
+            while (!exit){
                 movementEnemys(ClientCar,EnemyCar, posDir);
                 cliente.update();
                 try{
@@ -49,6 +49,9 @@ public class Main extends Application {
                     System.out.println("Error thread");
                 }
             }
+        }
+        public void stopThread() {
+            exit = true;
         }
     }
 
@@ -59,6 +62,10 @@ public class Main extends Application {
         this.setFirstWindow();
         primaryStage.setScene(scene);
         primaryStage.show();
+        primaryStage.setOnCloseRequest(E -> {
+            process.stopThread();
+            cliente.cleanFiles();
+        });
         button1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -77,13 +84,14 @@ public class Main extends Application {
                         blueCar.carImageView = gameWindow.getBlueCar();
                         blueCar.velocity=10;
                         cliente.update();
-                        if (!cliente.checkBothCars()) {
+                        if (cliente.checkBothCars()) {
                             primaryStage.close();
                             primaryStage.setTitle("Pole Position");
                             setGameWindow();
                             primaryStage.setScene(scene);
                             primaryStage.show();
-                            Process process = new Process(blueCar,redCar,-1);
+                            posDir = -1;
+                            process = new Process(blueCar,redCar,posDir);
                             process.start();
                             movement(blueCar,redCar);
                         } else {
@@ -100,13 +108,14 @@ public class Main extends Application {
                         blueCar.carImageView = gameWindow.getBlueCar();
                         redCar.velocity=10;
                         cliente.update();
-                        if (!cliente.checkBothCars()) {
+                        if (cliente.checkBothCars()) {
                             primaryStage.close();
                             primaryStage.setTitle("Pole Position");
                             setGameWindow();
                             primaryStage.setScene(scene);
                             primaryStage.show();
-                            Process process = new Process(redCar,blueCar,3);
+                            posDir = 3;
+                            process = new Process(redCar,blueCar,posDir);
                             process.start();
                             movement(redCar,blueCar);
                         } else {
