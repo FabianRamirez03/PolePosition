@@ -30,14 +30,9 @@ public class Cliente  {
     //metodo que inicia el cliente
     public void update()   {
         try{
-
-
-
             //se instancia el cliente y se le indica la ip y puerto de la conexion
             //canal por donde el cliente recibe y envia informacion
             Socket client = new Socket(ip, port);
-
-
 
             //crea el output por donde se envia la informacion del cliente hacia el servidor
             // la salida es la informacion que se envia al servidor y en este caso se indicia que es un objeto
@@ -47,14 +42,20 @@ public class Cliente  {
             InputStream input = client.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
-
             //Envia informacion al server
             PrintWriter pw = new PrintWriter(salida);
             pw.flush();
             pw.write(CarInfo()+"\0");
+            System.out.println("I sent to Server: " + CarInfo());
             pw.flush();
             //Lee la informacion enviada por el servidor
             String msg = reader.readLine();
+
+
+            //Aca manipulo la informacion recibida
+            updateRivalsCar(msg);
+
+
             lastAnswer = msg;
             //imprime la informacion enviada por el servidor
             System.out.println("Server says: " + msg);
@@ -73,6 +74,7 @@ public class Cliente  {
         }
     }
 
+    //Envia la instruccion que limpie los txt para que no interfiera en juegos futuros
     public void cleanFiles(){
         try{
             Socket client = new Socket(ip, port);
@@ -90,21 +92,32 @@ public class Cliente  {
             System.out.println(e.getMessage());
         }
     }
+    //Modifica los parametros del carro rival
     private void updateRivalsCar(String info){
-        List<String> strList = new ArrayList<String>(Arrays.asList(info.split(",")));
-        List<Double> numberList = new ArrayList<Double>();
+        //Descompone el string recibido en una lista de dobles
+        List<String> strList = new ArrayList<>(Arrays.asList(info.split(",")));
+        List<Double> numberList = new ArrayList<>(6);
         for (int i = 1; i < 6; i++){
-            numberList.set(i, Double.parseDouble(strList.get(i)));
+            numberList.add(Double.parseDouble(strList.get(i)));
         }
+        //En caso de no querer modificar parametros es modificar esta lista
+        rivalCar.carImageView.setX(numberList.get(0));
+        rivalCar.carImageView.setY(numberList.get(1));
+        rivalCar.carImageView.setFitWidth(numberList.get(2));
+        rivalCar.carImageView.setFitHeight(numberList.get(3));
+        rivalCar.velocity = numberList.get(4).intValue();
 
     }
 
+    //Consigue la informacion del carro principal que esta utilizando
+    //para luego enviarla al server
     public String CarInfo(){
         double[] carData =  getCarData();
         return getStringFromArray(carData);
 
     }
 
+    //Auxiliar de carInfo()
     private double[] getCarData(){
         double[] carData = new double[6];
         carData[0] = myCar.carImageView.getX();
@@ -115,6 +128,8 @@ public class Cliente  {
         return carData;
     }
 
+    //Convierte un String para enviar al servidor proveniente de la lista
+    //de atributos. Indispensable que se separa por comas
     private String getStringFromArray(double[] array){
         String string = name+",";
         int length = array.length-1;
@@ -125,6 +140,7 @@ public class Cliente  {
         return string;
     }
 
+    //Getters and Setters
     public void setMyCar(Car car, String name){
         this.myCar = car;
         this.name = name;
