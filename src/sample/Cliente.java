@@ -21,6 +21,7 @@ public class Cliente  {
         boolean result = false;
         update();
         if(lastAnswer != "" && lastAnswer != "wait"){
+            System.out.println("No");
             result = true;
         }
         return result;
@@ -54,7 +55,8 @@ public class Cliente  {
             //Envia informacion al server
             PrintWriter pw = new PrintWriter(salida);
             pw.flush();
-            pw.write(this.CarInfo()+"\0");
+            System.out.println(CarInfo());
+            pw.write(CarInfo()+"\0");
             pw.flush();
             //Lee la informacion enviada por el servidor
             String msg = reader.readLine();

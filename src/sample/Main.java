@@ -42,6 +42,7 @@ public class Main extends Application {
         public void run(){
             while (true){
                 movementEnemys(ClientCar,EnemyCar, posDir);
+                cliente.update();
                 try{
                     Process.sleep(75);
                 }catch (Exception e){
@@ -72,9 +73,11 @@ public class Main extends Application {
                     public void handle(ActionEvent actionEvent) {
                         cliente.setMyCar(blueCar, "blue");
                         cliente.setRivalCar(redCar);
+                        redCar.carImageView = gameWindow.getRedCar();
+                        blueCar.carImageView = gameWindow.getBlueCar();
                         blueCar.velocity=10;
                         cliente.update();
-                        if (cliente.checkBothCars()) {
+                        if (!cliente.checkBothCars()) {
                             primaryStage.close();
                             primaryStage.setTitle("Pole Position");
                             setGameWindow();
@@ -93,9 +96,11 @@ public class Main extends Application {
                     public void handle(ActionEvent actionEvent) {
                         cliente.setMyCar(redCar, "red");
                         cliente.setRivalCar(blueCar);
+                        redCar.carImageView = gameWindow.getRedCar();
+                        blueCar.carImageView = gameWindow.getBlueCar();
                         redCar.velocity=10;
                         cliente.update();
-                        if (cliente.checkBothCars()) {
+                        if (!cliente.checkBothCars()) {
                             primaryStage.close();
                             primaryStage.setTitle("Pole Position");
                             setGameWindow();
@@ -129,8 +134,6 @@ public class Main extends Application {
     }
 
     private void setGameWindow(){
-        redCar.carImageView = gameWindow.getRedCar();
-        blueCar.carImageView = gameWindow.getBlueCar();
         scene = gameWindow.getScene();
         root = gameWindow.getRoot();
         root.getChildren().add(redCar.carImageView);
@@ -168,7 +171,6 @@ public class Main extends Application {
                         holes.flag = 1;
                     }
             }
-            cliente.update();
         });
     }
 
