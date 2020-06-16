@@ -80,25 +80,33 @@ public class Main extends Application {
                             setGameWindow();
                             primaryStage.setScene(scene);
                             primaryStage.show();
+                            Process process = new Process(blueCar,redCar,-1);
+                            process.start();
                             movement(blueCar,redCar);
                         } else {
-                            System.out.println("Espera Al otro jugador");
+                            System.out.println("Espera al otro jugador");
                         }
-                        Process process = new Process(blueCar,redCar,-1);
-                        process.start();
                     }
                 });
                 button2.setOnAction(new EventHandler<ActionEvent>(){
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        primaryStage.close();
-                        primaryStage.setTitle("Pole Position");
-                        setGameWindow();
-                        primaryStage.setScene(scene);
-                        primaryStage.show();
-                        Process process = new Process(redCar,blueCar,3);
-                        process.start();
-                        movement(redCar,blueCar);
+                        cliente.setMyCar(redCar, "red");
+                        cliente.setRivalCar(blueCar);
+                        redCar.velocity=10;
+                        cliente.update();
+                        if (cliente.checkBothCars()) {
+                            primaryStage.close();
+                            primaryStage.setTitle("Pole Position");
+                            setGameWindow();
+                            primaryStage.setScene(scene);
+                            primaryStage.show();
+                            Process process = new Process(redCar,blueCar,3);
+                            process.start();
+                            movement(redCar,blueCar);
+                        } else {
+                            System.out.println("Espera al otro jugador");
+                        }
                     }
                 });
             }
