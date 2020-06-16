@@ -2,17 +2,32 @@ package sample;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 //clase cliente
 public class Cliente  {
 
     Car myCar;
+    Car rivalCar;
     String name;
+    String lastAnswer = "";
 
     public Cliente() {
     }
 
+    public boolean checkBothCars(){
+        boolean result = false;
+        update();
+        if(lastAnswer != "" && lastAnswer != "wait"){
+            result = true;
+        }
+        return result;
+    }
+
     //metodo que inicia el cliente
-    public  void start()   {
+    public void update()   {
         try{
 
             //string que indica la direccion ip local
@@ -37,21 +52,22 @@ public class Cliente  {
 
 
             //Envia informacion al server
-            PrintWriter pw=new PrintWriter(salida);
+            PrintWriter pw = new PrintWriter(salida);
             pw.flush();
             pw.write(this.CarInfo()+"\0");
             pw.flush();
             //Lee la informacion enviada por el servidor
             String msg = reader.readLine();
+            lastAnswer = msg;
             //imprime la informacion enviada por el servidor
             System.out.println(msg);
 
             //cierra el socket del cliente
             client.close();
 
-
             //cierra la salida de informacion
             salida.close();
+
 
         }
         catch(Exception e){
@@ -60,9 +76,19 @@ public class Cliente  {
         }
     }
 
+    private void updateRivalsCar(String info){
+        List<String> strList = new ArrayList<String>(Arrays.asList(info.split(",")));
+        List<Double> numberList = new ArrayList<Double>();
+        for (int i = 1; i < 6; i++){
+            numberList.set(i, Double.parseDouble(strList.get(i)));
+        }
+
+    }
+
     public String CarInfo(){
         double[] carData =  getCarData();
         return getStringFromArray(carData);
+
     }
 
     private double[] getCarData(){
@@ -90,4 +116,7 @@ public class Cliente  {
         this.name = name;
     }
 
+    public void setRivalCar(Car rivalCar) {
+        this.rivalCar = rivalCar;
+    }
 }

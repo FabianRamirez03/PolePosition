@@ -12,7 +12,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-
     Cliente cliente = new Cliente();
     FirstWindow firstWindow = FirstWindow.getInstance();
     SecondWindow secondWindow = SecondWindow.getInstance();
@@ -30,12 +29,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage){
-
         primaryStage.setTitle("Pole Position");
         this.setFirstWindow();
         primaryStage.setScene(scene);
         primaryStage.show();
-
         button1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -48,62 +45,73 @@ public class Main extends Application {
                 button1.setOnAction(new EventHandler<ActionEvent>(){
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        primaryStage.close();
-                        primaryStage.setTitle("Pole Position");
-                        setGameWindow();
-                        primaryStage.setScene(scene);
-                        primaryStage.show();
                         cliente.setMyCar(blueCar, "blue");
+                        cliente.setRivalCar(redCar);
                         blueCar.velocity=10;
-                        movement(blueCar,redCar);
+                        cliente.update();
+                        if (cliente.checkBothCars()) {
+                            primaryStage.close();
+                            primaryStage.setTitle("Pole Position");
+                            setGameWindow();
+                            primaryStage.setScene(scene);
+                            primaryStage.show();
+                            movement(blueCar,redCar);
+                        } else {
+                            System.out.println("Espera Al otro jugador");
+                        }
                     }
-
                 });
                 button2.setOnAction(new EventHandler<ActionEvent>(){
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        primaryStage.close();
-                        primaryStage.setTitle("Pole Position");
-                        setGameWindow();
-                        primaryStage.setScene(scene);
-                        primaryStage.show();
                         cliente.setMyCar(redCar, "red");
-                        scene.setOnKeyPressed(e -> {
-                            switch (e.getCode()){
-                                case A:
-                                    if(blueCar.carImageView.getY() > 300){
-                                        blueCar.carImageView.setFitWidth(blueCar.carImageView.getFitWidth() - 7);
-                                        blueCar.carImageView.setFitHeight(blueCar.carImageView.getFitHeight() - 7);
-                                        blueCar.carImageView.setY(blueCar.carImageView.getY() - 5);
-                                        blueCar.carImageView.setX(blueCar.carImageView.getX() + 11);
-                                    }
-                                    if(redCar.carImageView.getX()==(blueCar.carImageView.getX() + 200)){
+                        cliente.setRivalCar(blueCar);
+                        redCar.velocity = 10;
+                        cliente.update();
+                        if (cliente.checkBothCars()) {
+                            primaryStage.close();
+                            primaryStage.setTitle("Pole Position");
+                            setGameWindow();
+                            primaryStage.setScene(scene);
+                            primaryStage.show();
+                            scene.setOnKeyPressed(e -> {
+                                switch (e.getCode()){
+                                    case A:
+                                        if(blueCar.carImageView.getY() > 300){
+                                            blueCar.carImageView.setFitWidth(blueCar.carImageView.getFitWidth() - 7);
+                                            blueCar.carImageView.setFitHeight(blueCar.carImageView.getFitHeight() - 7);
+                                            blueCar.carImageView.setY(blueCar.carImageView.getY() - 5);
+                                            blueCar.carImageView.setX(blueCar.carImageView.getX() + 11);
+                                        }
+                                        if(redCar.carImageView.getX()==(blueCar.carImageView.getX() + 200)){
+                                            break;
+                                        }else {
+                                            redCar.carImageView.setX(redCar.carImageView.getX() - 5);
+                                        }
                                         break;
-                                    }else {
-                                        redCar.carImageView.setX(redCar.carImageView.getX() - 5);
-                                    }
-                                    break;
-                                case D:
-                                    if(blueCar.carImageView.getY() > 300){
-                                        blueCar.carImageView.setFitWidth(blueCar.carImageView.getFitWidth() - 7);
-                                        blueCar.carImageView.setFitHeight(blueCar.carImageView.getFitHeight() - 7);
-                                        blueCar.carImageView.setY(blueCar.carImageView.getY() - 5);
-                                        blueCar.carImageView.setX(blueCar.carImageView.getX() + 11);
+                                        case D:
+                                            if(blueCar.carImageView.getY() > 300){
+                                                blueCar.carImageView.setFitWidth(blueCar.carImageView.getFitWidth() - 7);
+                                                blueCar.carImageView.setFitHeight(blueCar.carImageView.getFitHeight() - 7);
+                                                blueCar.carImageView.setY(blueCar.carImageView.getY() - 5);
+                                                blueCar.carImageView.setX(blueCar.carImageView.getX() + 11);
 
+                                            }
+                                            if(redCar.carImageView.getX()==(blueCar.carImageView.getX() - 200)){
+                                                break;
+                                            }else {
+                                                redCar.carImageView.setX(redCar.carImageView.getX() + 5);
+                                            }
+                                            break;
                                     }
-                                    if(redCar.carImageView.getX()==(blueCar.carImageView.getX() - 200)){
-                                        break;
-                                    }else {
-                                        redCar.carImageView.setX(redCar.carImageView.getX() + 5);
-                                    }
-                                    break;
-                            }
-                        });
-
-
+                                });
+                        }else{
+                            System.out.println("Espera Al otro jugador");
+                        }
                     }
-                });
-            }
+                    });
+                }
+
         });
     }
 
@@ -163,7 +171,7 @@ public class Main extends Application {
 
                     break;
             }
-            cliente.start();
+            cliente.update();
         });
     }
 
