@@ -225,8 +225,15 @@ public class Main extends Application {
             if(EnemyCar.velocity > ClientCar.velocity && EnemyCar.carImageView.getY() > 310) {
                 sizeChange(ClientCar, EnemyCar, -1,posDir);
             }
+            if(EnemyCar.carImageView.getY() <= 310){
+                EnemyCar.distance += EnemyCar.velocity - ClientCar.velocity;
+            }
             if(ClientCar.velocity > EnemyCar.velocity){
-                sizeChange(ClientCar, EnemyCar, 1,-posDir);
+                if(EnemyCar.distance > 0){
+                    EnemyCar.distance -= ClientCar.velocity - ClientCar.velocity;
+                }else {
+                    sizeChange(ClientCar, EnemyCar, 1, -posDir);
+                }
             }
         }
     }
@@ -244,7 +251,7 @@ public class Main extends Application {
         hole.holeImageView.setFitWidth(hole.holeImageView.getFitWidth() + velocity*(7/5));
         hole.holeImageView.setFitHeight(hole.holeImageView.getFitHeight() + velocity*(7/5));
         hole.holeImageView.setY(hole.holeImageView.getY() + velocity);
-        hole.holeImageView.setX(hole.holeImageView.getX() + posDir*velocity);
+        //hole.holeImageView.setX(hole.holeImageView.getX() + posDir*velocity);
     }
 
     Boolean inRange(Car ClientCar, Hole holes){

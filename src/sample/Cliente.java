@@ -53,7 +53,9 @@ public class Cliente  {
 
 
             //Aca manipulo la informacion recibida
-            updateRivalsCar(msg);
+            if (!msg.equals("wait")) {
+                updateRivalsCar(msg);
+            }
 
 
             lastAnswer = msg;
@@ -96,16 +98,13 @@ public class Cliente  {
     private void updateRivalsCar(String info){
         //Descompone el string recibido en una lista de dobles
         List<String> strList = new ArrayList<>(Arrays.asList(info.split(",")));
-        List<Double> numberList = new ArrayList<>(6);
-        for (int i = 1; i < 6; i++){
+        List<Double> numberList = new ArrayList<>(2);
+        for (int i = 1; i < 3; i++){
             numberList.add(Double.parseDouble(strList.get(i)));
         }
         //En caso de no querer modificar parametros es modificar esta lista
         rivalCar.carImageView.setX(numberList.get(0));
-        rivalCar.carImageView.setY(numberList.get(1));
-        rivalCar.carImageView.setFitWidth(numberList.get(2));
-        rivalCar.carImageView.setFitHeight(numberList.get(3));
-        rivalCar.velocity = numberList.get(4).intValue();
+        rivalCar.velocity = numberList.get(1).intValue();
 
     }
 
@@ -119,12 +118,9 @@ public class Cliente  {
 
     //Auxiliar de carInfo()
     private double[] getCarData(){
-        double[] carData = new double[6];
+        double[] carData = new double[2];
         carData[0] = myCar.carImageView.getX();
-        carData[1] = myCar.carImageView.getY();
-        carData[2] = myCar.carImageView.getFitWidth();
-        carData[3] = myCar.carImageView.getFitHeight();
-        carData[4] = myCar.velocity;
+        carData[1] = myCar.velocity.doubleValue();
         return carData;
     }
 
@@ -136,7 +132,7 @@ public class Cliente  {
         for (int i = 0; i<length; i++){
             string = string+array[i]+",";
         }
-        string = string+array[length-1];
+        string = string+array[length];
         return string;
     }
 
