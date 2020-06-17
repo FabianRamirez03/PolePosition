@@ -122,6 +122,7 @@ public class Cliente  {
         double[] carData = new double[3];
         carData[0] = myCar.carImageView.getX();
         carData[1] = myCar.velocity.doubleValue();
+        AnimatedImage.setDuration(myCar.velocity);
         myCar.distance = myCar.distance + myCar.velocity;
         carData[2] = myCar.distance.doubleValue();
         return carData;
