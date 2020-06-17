@@ -105,6 +105,7 @@ public class Cliente  {
         //En caso de no querer modificar parametros es modificar esta lista
         rivalCar.carImageView.setX(numberList.get(0));
         rivalCar.velocity = numberList.get(1).intValue();
+        rivalCar.distance = rivalCar.distance + rivalCar.velocity;
 
     }
 
@@ -118,9 +119,11 @@ public class Cliente  {
 
     //Auxiliar de carInfo()
     private double[] getCarData(){
-        double[] carData = new double[2];
+        double[] carData = new double[3];
         carData[0] = myCar.carImageView.getX();
         carData[1] = myCar.velocity.doubleValue();
+        myCar.distance = myCar.distance + myCar.velocity;
+        carData[2] = myCar.distance.doubleValue();
         return carData;
     }
 
