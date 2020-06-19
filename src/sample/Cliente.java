@@ -15,16 +15,17 @@ public class Cliente  {
     private String lastAnswer = "";
     private final String ip = "192.168.100.22";
     private final int port = 25557;
+    private final int winDistance = 1000;
 
     public Cliente() {
     }
 
     public boolean checkBothCars(){
-        if(lastAnswer.equals("wait")){
-            System.out.println("espero");
-            return false;
-        }
-        return true;
+        return !lastAnswer.equals("wait");
+    }
+
+    public boolean checkWinner(){
+        return !FinalWindow.getInstance().getWhoWin().equals("Keep playing");
     }
 
     //metodo que inicia el cliente
@@ -55,6 +56,13 @@ public class Cliente  {
             //Aca manipulo la informacion recibida
             if (!msg.equals("wait")) {
                 updateRivalsCar(msg);
+            }
+
+            if(rivalCar.distance >= winDistance){
+                FinalWindow.getInstance().setWhoWin("Perdiste");
+            }
+            if(myCar.distance >= winDistance){
+                FinalWindow.getInstance().setWhoWin("Ganaste");
             }
 
 

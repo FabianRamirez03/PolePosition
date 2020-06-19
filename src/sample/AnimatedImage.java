@@ -16,11 +16,17 @@ public class AnimatedImage {
     public double duration;
 
 
+    /**
+     *Obtiene el frame a mostrar por segundo
+     * @param time tiempo actual en el que trabaja el programa
+     * @return devuelve el exacto a mostrar
+     */
     public Image getFrame(double time)
     {
         int index = (int)((time % (frames.length * duration)) / duration);
         return frames[index];
     }
+
 
     public static void setDuration(double carSpeed) {
         if (carSpeed>0 && carSpeed <= 22) {
@@ -28,6 +34,5 @@ public class AnimatedImage {
         } else {
             AnimatedImage.getInstance().duration = 0;
         }
-        System.out.println(AnimatedImage.getInstance().duration);
     }
 }

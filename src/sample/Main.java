@@ -16,6 +16,7 @@ public class Main extends Application {
     FirstWindow firstWindow = FirstWindow.getInstance();
     SecondWindow secondWindow = SecondWindow.getInstance();
     GameWindow gameWindow = GameWindow.getInstance();
+    FinalWindow finalWindow = FinalWindow.getInstance();
     Button button1;
     Button button2;
     ImageView imageView;
@@ -31,11 +32,14 @@ public class Main extends Application {
         Car ClientCar;
         Car EnemyCar;
         Integer posDir;
+        Boolean keepPlaying = true;
+        Stage primaryStage;
 
-        Process(Car ClientCar, Car EnemyCar, Integer posDir){
+        Process(Car ClientCar, Car EnemyCar, Integer posDir, Stage primaryStage){
             this.ClientCar = ClientCar;
             this.EnemyCar = EnemyCar;
             this.posDir = posDir;
+            this.primaryStage = primaryStage;
         }
 
         @Override
@@ -43,6 +47,12 @@ public class Main extends Application {
             while (!exit){
                 movementEnemys(ClientCar,EnemyCar, posDir);
                 cliente.update();
+                if(cliente.checkWinner()){
+                    keepPlaying = false;
+                    System.out.println(finalWindow.getWhoWin());
+                    AnimatedImage.setDuration(0);
+                    this.stopThread();
+                }
                 try{
                     Process.sleep(75);
                 }catch (Exception e){
@@ -91,7 +101,7 @@ public class Main extends Application {
                             primaryStage.setScene(scene);
                             primaryStage.show();
                             posDir = -1;
-                            process = new Process(blueCar,redCar,posDir);
+                            process = new Process(blueCar,redCar,posDir, primaryStage);
                             process.start();
                             movement(blueCar,redCar);
                         } else {
@@ -115,7 +125,7 @@ public class Main extends Application {
                             primaryStage.setScene(scene);
                             primaryStage.show();
                             posDir = 3;
-                            process = new Process(redCar,blueCar,posDir);
+                            process = new Process(redCar,blueCar,posDir, primaryStage);
                             process.start();
                             movement(redCar,blueCar);
                         } else {
@@ -147,12 +157,8 @@ public class Main extends Application {
         root = gameWindow.getRoot();
         root.getChildren().add(redCar.carImageView);
         root.getChildren().add(blueCar.carImageView);
-
     }
 
-    public void KeyPressed(KeyEvent event){
-
-    }
 
     public void movement(Car ClientCar,Car EnemyCar){
         scene.setOnKeyPressed(e -> {
