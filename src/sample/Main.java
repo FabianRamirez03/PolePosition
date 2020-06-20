@@ -360,7 +360,7 @@ public class Main extends Application {
 
     /**
      * Ejecuta la aplicacion
-     * @param args
+     * @param args argumento de la aplicacion
      */
     public static void main(String[] args) {
         launch(args);
