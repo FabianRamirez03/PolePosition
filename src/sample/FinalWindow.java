@@ -1,8 +1,9 @@
 package sample;
 
+//Dependencias de la clase
+
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
@@ -17,6 +18,10 @@ public class FinalWindow {
     private Scene scene;
 
 
+    /**
+     * Singlenton utilizado en la clase
+     * @return devuelve la instancia unica de la clase
+     */
     public static FinalWindow getInstance(){
         if (instance == null){
             instance = new FinalWindow();
@@ -24,6 +29,9 @@ public class FinalWindow {
         return instance;
     }
 
+    /**
+     * Constructor
+     */
     public FinalWindow() {
         this.whoWin = "Keep playing";
         this.backGround = ImageView();
@@ -31,6 +39,10 @@ public class FinalWindow {
         this.scene = new Scene(root);
     }
 
+    /**
+     * Obtiene la imagen de fondo de la imagen final
+     * @return imagen del fondo
+     */
     private ImageView ImageView(){
         Image bg = new Image(getClass().getResource("Imagenes/bg.jpg").toString());
         ImageView imageView = new ImageView(bg);
@@ -39,27 +51,19 @@ public class FinalWindow {
         return imageView;
     }
 
-
+    /**
+     * Agrega el fondo al Group de la ventana
+     * @param imageView Imagen del fondo
+     * @return El group de la ventana
+     */
     private Group Root(ImageView imageView){
         Group root = new Group();
         root.getChildren().add(imageView);
         return root;
     }
 
-    public void updateText(){
-        //Creating a Text object
-        Text text = new Text();
-        //Setting the text to be added.
-        text.setText(this.whoWin);
-        //setting the position of the text
-        text.setX(50);
-        text.setY(50);
 
-        FinalWindow.getInstance().text = text;
-
-        FinalWindow.getInstance().root.getChildren().add(text);
-    }
-
+    //Getters and setters
     public static void setInstance(FinalWindow instance) {
         FinalWindow.instance = instance;
     }

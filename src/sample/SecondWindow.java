@@ -6,10 +6,20 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Ventana de seleccion del vehiculo
+ */
 public class SecondWindow {
 
+    /**
+     * Instancia unica de la clase second window
+     */
     private static SecondWindow instance = null;
 
+    /**
+     * Obtiene la instancia unica de la clase
+     * @return instancia unica de la clase
+     */
     public static SecondWindow getInstance(){
         if (instance == null){
             instance = new SecondWindow();
@@ -17,6 +27,9 @@ public class SecondWindow {
         return instance;
     }
 
+    /**
+     * Constructor privado de la clase
+     */
     private SecondWindow() {
         this.button1 = Button1();
         this.button2 = Button2();
@@ -26,13 +39,38 @@ public class SecondWindow {
         this.scene = Scene(root);
     }
 
+    /**
+     * Boton Del carro azul
+     */
     private Button button1;
+    /**
+     * Boton del carro rojo
+     */
     private Button button2;
+    /**
+     * Imagen del fondo
+     */
     private Image backGround;
+
+    /**
+     *ImageView Aplicada a la imagen del fondo
+     */
     private ImageView imageView;
+
+    /**
+     * Group de la ventana
+     */
     private Group root;
+    /**
+     * Escena de la ventana
+     */
     private Scene scene;
 
+    /**
+     * Obtiene la imageView de la imagen del fondo
+     * @param backGround Imagen del fondo
+     * @return ImageView del fondo
+     */
     ImageView ImageView(Image backGround){
         imageView = new ImageView(backGround);
         imageView.setFitWidth(700);
@@ -40,11 +78,20 @@ public class SecondWindow {
         return imageView;
     }
 
+    /**
+     * Obtiene la escena a partir de la Group root
+     * @param root Group root
+     * @return Scene de la ventana
+     */
     Scene Scene(Group root){
         scene = new Scene(root);
         return scene;
     }
 
+    /**
+     * Obtiene el boton del carro azul
+     * @return boton para seleccionar el carro azul
+     */
     private Button Button1(){
         button1 = new Button("Blue");
         button1.setPrefSize(50,50);
@@ -53,6 +100,10 @@ public class SecondWindow {
         return button1;
     }
 
+    /**
+     * Obtiene el boton del carro rojo
+     * @return boton para seleccionar el carro rojo
+     */
     private Button Button2(){
         button2 = new Button("Red");
         button2.setPrefSize(50,50);
@@ -61,6 +112,13 @@ public class SecondWindow {
         return button2;
     }
 
+    /**
+     * Crea el Group root de la ventana, agregando los distintos elementos
+     * @param imageView ImageView del fondo
+     * @param button1 Boton del carro azul
+     * @param button2 Boton del carro rojo
+     * @return Group Root
+     */
     private Group Root(ImageView imageView, Button button1, Button button2){
         Group root = new Group();
         root.getChildren().add(imageView);
@@ -68,6 +126,8 @@ public class SecondWindow {
         root.getChildren().addAll(button2);
         return root;
     }
+
+    //Getters and Setters
 
     public static void setInstance(SecondWindow instance) {
         SecondWindow.instance = instance;

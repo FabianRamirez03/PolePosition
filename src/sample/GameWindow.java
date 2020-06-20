@@ -1,6 +1,6 @@
 package sample;
 
-
+//Dependencias de la clase
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -10,18 +10,46 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
+/**
+ * Pantalla principal del juego
+ */
 public class GameWindow {
 
+    /**
+     * Instancia unica de la clase
+     */
     private static GameWindow instance = null;
 
+    /**
+     * Canvas para dibujar los elementos
+     */
     private Canvas canvas;
+    /**
+     * Group de la clase
+     */
     private Group root;
+    /**
+     * Escena de la clase
+     */
     private Scene scene;
+    /**
+     * Imagen Grafico del carro azul para ser dibujada
+     */
     private ImageView blueCar;
+    /**
+     * Imagen Grafico del carro rojo para ser dibujada
+     */
     private ImageView redCar;
+    /**
+     * Imagen Grafico del hoyo para ser dibujada
+     */
     private ImageView hole;
 
 
+    /**
+     * Obtiene la instancia unica de la clase
+     * @return Instancia unica de la clase
+     */
     public static GameWindow getInstance(){
         if (instance == null){
             instance = new GameWindow();
@@ -29,6 +57,9 @@ public class GameWindow {
         return instance;
     }
 
+    /**
+     * Constructor privado de la clase
+     */
     private GameWindow() {
         this.canvas = getGameCanvas();
         this.root = new Group();
@@ -36,8 +67,11 @@ public class GameWindow {
         root.getChildren().add(canvas);
     }
 
+    /**
+     * Obtiene la imagen grafica de carro rojo para ser dibujada
+     * @return imagen grafica del carro rojo
+     */
     ImageView getRedCar(){
-
         Image car = new Image(getClass().getResource("Imagenes/carroNaranja.png").toString());
         redCar = new ImageView(car);
         redCar.setFitHeight(165);
@@ -47,6 +81,10 @@ public class GameWindow {
         return redCar;
     }
 
+    /**
+     * Obtiene la imagen grafica de carro azul para ser dibujada
+     * @return imagen grafica del carro azul
+     */
     ImageView getBlueCar(){
         Image car = new Image(getClass().getResource("Imagenes/carroAzul.png").toString());
         blueCar = new ImageView(car);
@@ -57,6 +95,10 @@ public class GameWindow {
         return blueCar;
     }
 
+    /**
+     * Obtiene la imagen grafica de los hoyos
+     * @return imagen grafica de los hoyos
+     */
     ImageView getHoles(){
         Image holeImage = new Image(getClass().getResource("Imagenes/hole.png").toString());
         hole = new ImageView(holeImage);
@@ -65,6 +107,10 @@ public class GameWindow {
         return hole;
     }
 
+    /**
+     * Obtiene El canvas dibujado con los elementos a dibujar y el fondo dinamico
+     * @return canvas con los elementos dibujados
+     */
     private Canvas getGameCanvas(){
         Canvas canvas = new Canvas( 1000, 750 );
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
@@ -87,6 +133,8 @@ public class GameWindow {
         }.start();
         return canvas;
     }
+
+    //Getters and setters
 
     private Scene setScene(Group root){
         scene = new Scene(root);
