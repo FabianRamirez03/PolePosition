@@ -8,6 +8,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
+/**
+ * Ventana final cuando hay un ganador
+ */
 public class FinalWindow {
     private static FinalWindow instance = null;
 

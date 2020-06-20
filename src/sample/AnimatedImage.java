@@ -2,6 +2,9 @@ package sample;
 
 import javafx.scene.image.Image;
 
+/**
+ * Clase que crea un conjunto de imahgenes que se reproducen para una imagen dinamica
+ */
 public class AnimatedImage {
     /**
      * Singleton utilizado, debido a que solo se utiliza una imagen animada

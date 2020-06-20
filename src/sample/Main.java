@@ -11,6 +11,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
+/**
+ * Clase main. Se ejecuta el programa a partir de esta clase
+ */
 public class Main extends Application {
     Cliente cliente = new Cliente();
     FirstWindow firstWindow = FirstWindow.getInstance();
@@ -27,6 +30,10 @@ public class Main extends Application {
     Group root;
     int posDir;
     Process process;
+
+    /**
+     * Clase que se encarga del hilo que actualiza el estado del carro rival
+     */
     public class Process extends Thread{
         private volatile boolean exit = false;
         Car ClientCar;
@@ -35,6 +42,13 @@ public class Main extends Application {
         Boolean keepPlaying = true;
         Stage primaryStage;
 
+        /**
+         * Constructor con los elementos necesarios para correr el hilo
+         * @param ClientCar carro principal
+         * @param EnemyCar carro del oponente
+         * @param posDir direccion en la que se debe mover
+         * @param primaryStage Stage en la que se aplicaran los cambios
+         */
         Process(Car ClientCar, Car EnemyCar, Integer posDir, Stage primaryStage){
             this.ClientCar = ClientCar;
             this.EnemyCar = EnemyCar;
@@ -42,6 +56,9 @@ public class Main extends Application {
             this.primaryStage = primaryStage;
         }
 
+        /**
+         * Inicia el hilo
+         */
         @Override
         public void run(){
             while (!exit){
@@ -60,6 +77,10 @@ public class Main extends Application {
                 }
             }
         }
+
+        /**
+         * Detiene el hilo de forma segura
+         */
         public void stopThread() {
             exit = true;
         }
@@ -137,6 +158,9 @@ public class Main extends Application {
         });
     }
 
+    /**
+     * Actualiza los elemetos del stage con los elementos de la primera ventana
+     */
     private void setFirstWindow(){
         button1 = firstWindow.getButton();
         imageView = firstWindow.getImageView();
@@ -144,6 +168,9 @@ public class Main extends Application {
         root = firstWindow.getRoot();
     }
 
+    /**
+     * Actualiza los elemetos del stage con los elementos de la segunda ventana
+     */
     private void setSecondWindow(){
         root = secondWindow.getRoot();
         scene = secondWindow.getScene();
@@ -152,6 +179,9 @@ public class Main extends Application {
         button2 = secondWindow.getButton2();
     }
 
+    /**
+     * Actualiza los elemetos del stage con los elementos de la ventana principal
+     */
     private void setGameWindow(){
         scene = gameWindow.getScene();
         root = gameWindow.getRoot();
@@ -160,7 +190,12 @@ public class Main extends Application {
     }
 
 
-    public void movement(Car ClientCar,Car EnemyCar){
+    /**
+     * Se encarga del movimiento de los carros a partir de los inputs del usuario
+     * @param ClientCar Carro principal
+     * @param EnemyCar Carro del enemigo
+     */
+    private void movement(Car ClientCar,Car EnemyCar){
         scene.setOnKeyPressed(e -> {
 
             switch (e.getCode()){
@@ -189,7 +224,13 @@ public class Main extends Application {
         });
     }
 
-    void movementAux(Car ClientCar, Car EnemyCar, Integer dir){
+    /**
+     * Funcion auxiliar de movement
+     * @param ClientCar Carro principal
+     * @param EnemyCar Carro del enemigo
+     * @param dir Direccion en la que se mueven los carros
+     */
+    private void movementAux(Car ClientCar, Car EnemyCar, Integer dir){
         if(((ClientCar.carImageView.getX()==(EnemyCar.carImageView.getX() - dir*200)
                 || ClientCar.carImageView.getX() + dir*200 == EnemyCar.carImageView.getX())
                 && ClientCar.carImageView.getY() == EnemyCar.carImageView.getY())
@@ -207,7 +248,13 @@ public class Main extends Application {
         }
     }
 
-    void movementEnemys(Car ClientCar, Car EnemyCar,Integer posDir){
+    /**
+     * Aplica el movimiento inverson dependiendo del movimiento del carro principal
+     * @param ClientCar Carro principal
+     * @param EnemyCar Carro del enemigo
+     * @param posDir Direccion en la que se mueve la direccion los carros
+     */
+    private void movementEnemys(Car ClientCar, Car EnemyCar,Integer posDir){
         if(holes.flag == 1){
             holeSizeChange(ClientCar,holes,1, posDir);
             if((ClientCar.carImageView.getY() <= (holes.holeImageView.getY() + 35))
@@ -244,7 +291,14 @@ public class Main extends Application {
         }
     }
 
-    void sizeChange(Car ClientCar, Car EnemyCar, Integer dir, Integer posDir){
+    /**
+     * Aplica cambios en el tamaño de los carros
+     * @param ClientCar Carro principal
+     * @param EnemyCar Carro del enemigo
+     * @param posDir Direccion en la que se mueve la direccion los carros
+     * @param dir Direccion en la que se mueven los carros
+     */
+    private void sizeChange(Car ClientCar, Car EnemyCar, Integer dir, Integer posDir){
         Integer difference = abs(ClientCar.velocity - EnemyCar.velocity);
         EnemyCar.carImageView.setFitWidth(EnemyCar.carImageView.getFitWidth() + dir*difference*(7/5));
         EnemyCar.carImageView.setFitHeight(EnemyCar.carImageView.getFitHeight() + dir*difference*(7/5));
@@ -252,7 +306,14 @@ public class Main extends Application {
         EnemyCar.carImageView.setX(EnemyCar.carImageView.getX() + posDir*difference * 0.72);
     }
 
-    void holeSizeChange(Car ClientCar, Hole hole, Integer dir, Integer posDir){
+    /**
+     * Cambio en el tamaño de los hoyos
+     * @param ClientCar Carro principal
+     * @param hole Hoyo a aplicarse la modificacion
+     * @param posDir Direccion en la que se mueve la direccion los carros
+     * @param dir Direccion en la que se mueven los carros
+     */
+    private void holeSizeChange(Car ClientCar, Hole hole, Integer dir, Integer posDir){
         Integer velocity = dir*(ClientCar.velocity);
         hole.holeImageView.setFitWidth(hole.holeImageView.getFitWidth() + velocity*(7/5));
         hole.holeImageView.setFitHeight(hole.holeImageView.getFitHeight() + velocity*(7/5));
@@ -260,7 +321,13 @@ public class Main extends Application {
         //hole.holeImageView.setX(hole.holeImageView.getX() + posDir*velocity);
     }
 
-    Boolean inRange(Car ClientCar, Hole holes){
+    /**
+     * Se asegura si el carro principal y los hoyos generados estan dentro de los limites de la pista
+     * @param ClientCar Carro principal
+     * @param holes Huecos generados
+     * @return true en caso de que se encuentren en un rango correcto
+     */
+    private Boolean inRange(Car ClientCar, Hole holes){
         if((holes.holeImageView.getX() >= ClientCar.carImageView.getX())
         && holes.holeImageView.getX() <= ClientCar.carImageView.getX() + ClientCar.carImageView.getFitWidth()){
 
@@ -278,7 +345,12 @@ public class Main extends Application {
         return false;
     }
 
-    Integer abs(Integer x){
+    /**
+     * Obtiene el valor absoluto de un numero
+     * @param x numero para aplicarle abs
+     * @return valor absoluto de X
+     */
+    private Integer abs(Integer x){
         if(x>0){
             return x;
         }else{
@@ -286,6 +358,10 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Ejecuta la aplicacion
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
 
